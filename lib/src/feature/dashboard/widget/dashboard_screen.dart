@@ -1,3 +1,4 @@
+import 'package:expenses_tracker/src/feature/app/routes.dart';
 import 'package:expenses_tracker/src/feature/balance/widget/balance_header.dart';
 import 'package:expenses_tracker/src/feature/categories/widget/category_grid.dart';
 import 'package:expenses_tracker/src/feature/dashboard/widget/recent_transactions_block.dart';
@@ -65,6 +66,12 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
               ),
               CategoryGrid(
                 canCreateNew: true,
+                onCategoryTap: (value) => Routes.updateCategory.push<void>(
+                  context,
+                  pathParameters: {
+                    'id': value.uuid,
+                  },
+                ),
               ),
             ],
           ),

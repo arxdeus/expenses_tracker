@@ -29,9 +29,13 @@ class UpsertCategoryScreen extends StatefulWidget {
 /// State for widget CreateCategoryScreen.
 class _UpsertCategoryScreenState extends State<UpsertCategoryScreen> {
   late final CategoryUpsertModule _module = CategoryUpsertModule(
+    categoryUuid: widget.uuid,
     categoryUpdatesDataRepository: DependenciesScope.of(context).categoriesUpdatesDataRepository,
     categoryGetSingle: DependenciesScope.of(context).categoriesDataProvider,
-    onCategoryFound: (category) => _module,
+    onCategoryFound: (category) {
+      _inputNameController.text = category.meta.name;
+      _imageUrl.value = category.meta.imageUrl;
+    },
     onUpsertDone: () => Future.delayed(
       Duration(milliseconds: 400),
       () {
@@ -107,7 +111,7 @@ class _UpsertCategoryScreenState extends State<UpsertCategoryScreen> {
                       Expanded(
                         flex: 8,
                         child: AvatarPicker(
-                          onImageChanged: (value) => _imageUrl.value = value,
+                          imageNotifier: _imageUrl,
                         ),
                       ),
                       Spacer(),

@@ -7,7 +7,7 @@ enum Routes {
   updateTransaction('/transaction/edit/:id', 'update_transaction'),
   createCategory('/category/create', 'create_category'),
   selectCategory('/category/select', 'select_category'),
-  updateCategory('/category/edit/:od', 'update_category'),
+  updateCategory('/category/edit/:id', 'update_category'),
   history('/history', 'history'),
   ;
 

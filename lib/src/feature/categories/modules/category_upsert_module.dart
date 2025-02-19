@@ -48,10 +48,21 @@ final class CategoryUpsertModule extends Module {
   Future<void> _upsertCategoryCall(PipelineContext context, CategoryUpsertRequest request) async {
     try {
       context.update(isLoading, CategoryUpsertState.processing);
-      final _ = await categoryUpdatesDataRepository.createCategory(
-        name: request.name,
-        imageUrl: request.imageUrl,
-      );
+      // FIXME: Someone kill me pls for this
+      if (categoryUuid == null) {
+        final _ = await categoryUpdatesDataRepository.createCategory(
+          name: request.name,
+          imageUrl: request.imageUrl,
+        );
+      } else {
+        final _ = await categoryUpdatesDataRepository.updateCategory(
+          categoryUuid!,
+          (old) => old.copyWith(
+            meta: old.meta.copyWith(imageUrl: request.imageUrl, name: request.name),
+          ),
+        );
+      }
+
       await Future<void>.delayed(const Duration(milliseconds: 350));
 
       context.update(isLoading, CategoryUpsertState.successful);

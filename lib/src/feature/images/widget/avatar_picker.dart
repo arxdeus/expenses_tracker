@@ -11,13 +11,11 @@ import 'package:pure/pure.dart';
 class AvatarPicker extends StatefulWidget {
   /// {@macro avatar_picker}
   const AvatarPicker({
-    this.initialLink,
-    this.onImageChanged,
+    required this.imageNotifier,
     super.key, // ignore: unused_element
   });
 
-  final String? initialLink;
-  final ValueChanged<String?>? onImageChanged;
+  final ValueNotifier<String?> imageNotifier;
 
   @override
   State<AvatarPicker> createState() => _AvatarPickerState();
@@ -28,32 +26,30 @@ class _AvatarPickerState extends State<AvatarPicker> {
   late final _module = ImagePickerModule(
     picker: DependenciesScope.of(context).imagePickerDataProvider,
     fileCache: DependenciesScope.of(context).fileCacheDataProvider,
-    initialImage: widget.initialLink,
   );
 
   late final _adapter = ListenableAdapter(_module.imageLink);
 
-  void _callback() => widget.onImageChanged?.call(_module.imageLink.value);
+  void _callback() => widget.imageNotifier.value = _module.imageLink.value;
 
   @override
   void initState() {
     super.initState();
-    if (widget.onImageChanged != null) {
-      _adapter.addListener(_callback);
-    }
+
+    _adapter.addListener(_callback);
   }
 
   @override
-  Widget build(BuildContext context) => StoreBuilder(
-        store: _module.imageLink,
-        builder: (context, imageLink, _) => GestureDetector(
+  Widget build(BuildContext context) => ValueListenableBuilder(
+        valueListenable: widget.imageNotifier,
+        builder: (context, imageUrl, _) => GestureDetector(
           onTap: _module.pickImage.call,
           behavior: HitTestBehavior.opaque,
           child: CircleAvatar(
             minRadius: 17,
             maxRadius: 48,
-            backgroundColor: imageLink == null ? Colors.blueAccent.withAlpha(50) : null,
-            foregroundImage: imageLink?.pipe(ImageLink.local).toImageProvider(),
+            backgroundColor: imageUrl == null ? Colors.blueAccent.withAlpha(50) : null,
+            foregroundImage: imageUrl?.pipe(ImageLink.local).toImageProvider(),
             child: Icon(
               Icons.photo_outlined,
               color: Colors.blueAccent,
