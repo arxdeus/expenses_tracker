@@ -1,0 +1,39 @@
+name: resources
+description: "A new Flutter package project."
+version: 0.0.1
+resolution: workspace
+
+environment:
+  sdk: ">=3.6.0 <4.0.0"
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter_localizations:
+    sdk: flutter
+  flutter:
+    sdk: flutter
+dev_dependencies:
+  asset_manager_cli:
+    git:
+      url: https://github.com/arxdeus/asset_manager/
+      ref: master
+  spider:
+    git:
+      url: https://github.com/BirjuVachhani/spider
+      ref: main
+  flutter_gen_runner: ^5.5.0+1
+
+dependency_overrides:
+  intl: ^0.20.0
+  pub_updater: ^0.4.0
+  http: ^1.0.0
+  file: ^7.0.0
+  collection: ^1.18.0
+
+
+
+flutter_gen:
+  assets:
+    outputs:
+      package_parameter_enabled: true # <- Add this line.
+  output: lib/_assets/ # Optional (default: lib/gen/)
