@@ -3,16 +3,26 @@ import 'dart:async';
 import 'package:expenses_tracker/src/feature/transactions/interface/data_repository/transaction_updates_data_repository.dart';
 import 'package:expenses_tracker/src/feature/transactions/model/transaction_cursor.dart';
 import 'package:expenses_tracker/src/feature/transactions/model/transaction_entity.dart';
+import 'package:expenses_tracker/src/shared/model/decimal.dart';
 import 'package:expenses_tracker/src/shared/model/object_update.dart';
 
 typedef TransactionUpdate = ObjectUpdate<TransactionEntity>;
 
 abstract class TransactionCreateInterface {
-  FutureOr<void> createTransaction(TransactionUpdatesRequestCreate _);
+  FutureOr<void> createTransaction({
+    required Decimal rawAmount,
+    required String description,
+    required DateTime updatedAt,
+    String? categoryUuid,
+  });
 }
 
 abstract class TransactionDeleteInterface {
   FutureOr<void> deleteTransactionById(String _);
+}
+
+abstract class TransactionUpdateSingleInterface {
+  Future<TransactionEntity?> updateTransaction(String uuid, TransactionEntity Function(TransactionEntity old) update);
 }
 
 abstract class TransactionUpdatesInterface {
@@ -20,7 +30,7 @@ abstract class TransactionUpdatesInterface {
 }
 
 abstract class TransactionDataProviderGetSingleInterface {
-  Future<TransactionEntity> getById(String id);
+  Future<TransactionEntity?> getById(String id);
 }
 
 abstract class TransactionDataProviderGetManyInterface {

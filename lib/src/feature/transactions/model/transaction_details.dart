@@ -1,6 +1,7 @@
+import 'package:meta/meta.dart';
+
 import 'package:expenses_tracker/src/feature/categories/model/category_detailed_entity.dart';
 import 'package:expenses_tracker/src/shared/model/decimal.dart';
-import 'package:meta/meta.dart';
 
 @immutable
 class TransactionDetails {
@@ -27,5 +28,35 @@ class TransactionDetails {
   @override
   String toString() {
     return 'TransactionDetails(description: $description, amount: $amount, updatedAt: $updatedAt, category: $category)';
+  }
+
+  TransactionDetails copyWith({
+    String? description,
+    Decimal? amount,
+    DateTime? updatedAt,
+    CategoryEntity? category,
+  }) {
+    return TransactionDetails(
+      description: description ?? this.description,
+      amount: amount ?? this.amount,
+      updatedAt: updatedAt ?? this.updatedAt,
+      category: category ?? this.category,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is TransactionDetails &&
+        other.description == description &&
+        other.amount == amount &&
+        other.updatedAt == updatedAt &&
+        other.category == category;
+  }
+
+  @override
+  int get hashCode {
+    return Object.hash(description, amount, updatedAt, category);
   }
 }

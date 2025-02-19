@@ -3,7 +3,10 @@ import 'package:expenses_tracker/src/feature/transactions/model/transaction_enti
 import 'package:expenses_tracker/src/shared/model/decimal.dart';
 
 abstract class TransactionsDataProviderInterface
-    implements TransactionDataProviderGetManyInterface, TransactionDataProviderGetSingleInterface {
+    implements
+        TransactionDataProviderGetManyInterface,
+        TransactionDataProviderGetSingleInterface,
+        TransactionUpdateSingleInterface {
   Future<TransactionEntity> createTransaction({
     required Decimal amount,
     required String description,

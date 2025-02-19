@@ -81,7 +81,7 @@ class _UpsertTransactionScreenState extends State<UpsertTransactionScreen> {
           uuid: widget.uuid,
           description: _inputNameController.text,
           rawAmount: Decimal.parse(_inputAmountController.text),
-          categoryUuid: _selectedCategory.value.uuid,
+          categoryUuid: _selectedCategory.value,
           updatedAt: DateTime.now(),
         ),
       );

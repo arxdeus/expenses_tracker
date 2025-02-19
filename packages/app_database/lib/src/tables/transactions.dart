@@ -13,4 +13,7 @@ class Transactions extends Table with UuidPrimaryKey, UpdateAtMixin {
   IntColumn get fractionalValue => integer().withDefault(Constant(0))();
 
   TextColumn get category => text().nullable().references(Categories, #uuid)();
+
+  @override
+  Set<Column<Object>>? get primaryKey => {uuid};
 }

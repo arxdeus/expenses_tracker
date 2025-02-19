@@ -1,3 +1,4 @@
+import 'package:expenses_tracker/src/feature/categories/model/category_detailed_entity.dart';
 import 'package:expenses_tracker/src/feature/transactions/interface/data_repository/transaction_updates_data_repository.dart';
 import 'package:expenses_tracker/src/feature/transactions/interface/transaction_interfaces.dart';
 import 'package:expenses_tracker/src/feature/transactions/model/transaction_entity.dart';
@@ -8,7 +9,7 @@ typedef TransactionUpsertRequest = ({
   String? uuid,
   String description,
   Decimal rawAmount,
-  String? categoryUuid,
+  CategoryEntity? categoryUuid,
   DateTime updatedAt,
 });
 
@@ -44,13 +45,32 @@ final class TransactionUpsertModule extends Module {
   Future<void> _prefetchTransaction(String? uuid) async {
     if (uuid == null) return;
     final transaction = await transactionGetSingle.getById(uuid);
+    if (transaction == null) return;
     _onTransactionFound?.call(transaction);
   }
 
   Future<void> _upsertTransactionCall(PipelineContext context, TransactionUpsertRequest request) async {
     try {
       context.update(isLoading, TransactionUpsertState.processing);
-      final _ = await transactionUpdatesDataRepository.createTransaction(request);
+      if (transactionUuid == null) {
+        final _ = await transactionUpdatesDataRepository.createTransaction(
+          rawAmount: request.rawAmount,
+          description: request.description,
+          updatedAt: request.updatedAt,
+          categoryUuid: request.categoryUuid?.uuid,
+        );
+      } else {
+        final _ = await transactionUpdatesDataRepository.updateTransaction(
+          transactionUuid!,
+          (old) => old.copyWith(
+            meta: old.meta.copyWith(
+              description: request.description,
+              amount: request.rawAmount,
+              category: request.categoryUuid,
+            ),
+          ),
+        );
+      }
       await Future<void>.delayed(const Duration(milliseconds: 350));
 
       context.update(isLoading, TransactionUpsertState.successful);

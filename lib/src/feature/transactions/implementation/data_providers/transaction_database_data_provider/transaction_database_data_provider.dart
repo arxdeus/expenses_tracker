@@ -2,6 +2,7 @@ import 'package:app_core/app_core.dart';
 import 'package:app_database/app_database.dart';
 import 'package:expenses_tracker/src/feature/categories/model/category_detailed_entity.dart';
 import 'package:expenses_tracker/src/feature/categories/model/category_meta.dart';
+import 'package:expenses_tracker/src/feature/transactions/implementation/data_providers/transaction_database_data_provider/converter/transaction_entry_encoder.dart';
 import 'package:expenses_tracker/src/feature/transactions/implementation/data_providers/transaction_database_data_provider/converter/transaction_history_db_decoder.dart';
 import 'package:expenses_tracker/src/feature/transactions/implementation/data_providers/transaction_database_data_provider/model/extensions.dart';
 import 'package:expenses_tracker/src/feature/transactions/implementation/data_providers/transaction_database_data_provider/model/transaction_db_with_meta.dart';
@@ -111,7 +112,7 @@ class TransactionDatabaseDataProvider implements TransactionsDataProviderInterfa
   }
 
   @override
-  Future<TransactionEntity> getById(String id) async {
+  Future<TransactionEntity?> getById(String id) async {
     final query = (database.transactions.select()..where((transaction) => transaction.uuid.equals(id))).join([
       leftOuterJoin(
         database.categories,
@@ -126,5 +127,20 @@ class TransactionDatabaseDataProvider implements TransactionsDataProviderInterfa
     final dbEntity = await query.getSingle();
 
     return _decoder.convert(dbEntity);
+  }
+
+  @override
+  Future<TransactionEntity?> updateTransaction(
+    String uuid,
+    TransactionEntity Function(TransactionEntity old) update,
+  ) async {
+    final transaction = await getById(uuid);
+    if (transaction == null) return null;
+
+    final newTransaction = update(transaction);
+    final dbEntity = TransactionEntryEncoder().convert(newTransaction);
+
+    final _ = await database.transactions.update().replace(dbEntity);
+    return newTransaction;
   }
 }
