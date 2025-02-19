@@ -1,8 +1,7 @@
 # expenses_tracker
 
 
-
-https://github.com/user-attachments/assets/0e813d4a-0668-4b51-8d5b-d97eb4161c4b
+https://github.com/user-attachments/assets/7cbd0a1c-2267-49b5-801b-5af71c2b15c8
 
 
 
