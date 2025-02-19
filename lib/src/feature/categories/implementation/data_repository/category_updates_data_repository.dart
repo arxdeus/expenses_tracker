@@ -43,4 +43,18 @@ final class CategoryUpdatesDataRepository implements CategoryUpdatesDataReposito
   Future<void> deleteCategory(String uuid) {
     throw UnimplementedError();
   }
+
+  @override
+  Future<CategoryEntity?> updateCategory(String uuid, CategoryEntity Function(CategoryEntity p1) update) async {
+    final entity = await categoryDataProvider.updateCategory(uuid, update);
+    if (entity == null) return null;
+
+    _categoryUpdates.add(
+      ObjectUpdate(
+        data: entity,
+        kind: UpdateKind.update,
+      ),
+    );
+    return entity;
+  }
 }

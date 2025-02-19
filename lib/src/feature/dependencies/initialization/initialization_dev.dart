@@ -61,7 +61,7 @@ class DependencyInitializationDev extends AppDependency {
         (
           'Transaction Updates Data Repository',
           (container) async => container.transactionUpdatesDataRepository = TransactionsUpdatesDataRepositoryModule(
-                categoriesUpdateStatsInterface: container.categoriesDataProvider,
+                categoriesUpdateStatsInterface: container.categoriesUpdatesDataRepository,
                 transactionsDataProvider: container.transactionsHistoryDataProvider,
               ),
         ),
