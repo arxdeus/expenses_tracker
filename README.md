@@ -35,4 +35,4 @@ _Примечание_: drift + sqlite в качестве локального 
 _Примечание:_ Имхо, UI сделан на уровне, согласитесь
 - [X] Допустимо использовать только “Published by a pub.dev verified publisher” на https://pub.dev/
 
-_Примечание:_ пришлось свой стейт-менеджмент завести под verified published, но, судя по всему, это ок
+_Примечание:_ свой собственный state-management solution (под verified published)
