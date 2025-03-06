@@ -1,38 +1,17 @@
-# expenses_tracker
-
+# Expenses tracker
 
 https://github.com/user-attachments/assets/7cbd0a1c-2267-49b5-801b-5af71c2b15c8
 
+## Features
+- Custom categories creation: use your own photo and title
+- Smart transaction creation: you can't create a transaction for $0, the transaction type is substituted automatically depending on the specified amount
+- Beatiful animations
+- Stylish design
+- Cursor pagination for any 'cursorable' entity (only `updateAt` cursor is implemented, lel)
+- Custom `Decimal` and value parsing logic
 
-
-## Фичи
-- Создание кастомных категорий: своё фото, название
-- Умное создание транзакций: нельзя создать транзакцию на 0$, тип транзакции подставляется автоматически в зависимости от указанной суммы
-- Крутямбовые анимации
-- Стильный дизайн
-- Курсорная пагинация для любого исчисляемого энтити (но имплементирован только updateAt курсор, лел)
-- Кастомный Decimal и кастомной логикой парсинга значения
-
-## Технические нюансы
-- На вебе при создании категории и выборе картинки выпадет ошибка, дело в том что мы выбираем и сохраняем локально картинку, т.е в БД и кэш, а в вебе своего кэша по-умолчанию нет
-- Изначально хотелось сделать всё в ажуре, но сроки слишком сжатые, к тому же это __ТЕСТОВОЕ__ задание, поэтому я не выносил стили в отдельный пакет/файл/тему
-- Отсутсвует смена темы, цвета захардкожены
-- Локализация вынесена в отдельный пакет, но её функциональность не имплементирована - zaebalsa
-- Используется собственный стейт-менеджер (в pub.dev он под verified publisher, так что по правилам)
-
-### Технические требования:
-
-- [x] Создание экрана для добавления новых транзакций: Пользователь должен иметь возможность указать тип транзакции (расход или доход), сумму транзакции, категорию (питание, развлечения, транспорт и т.д.) и дату. Добавленные транзакции должны сохраняться в приложении.
-- [x] Экран просмотра списка транзакций: Разработайте экран, который будет отображать список всех добавленных пользователем транзакций. Каждая транзакция должна содержать информацию о типе, сумме, категории и ~~дате~~.
-- [ ] ~~Статистика и диаграммы: Реализуйте экран с общей статистикой по расходам и доходам. Включите графическую диаграмму, отображающую соотношение расходов и доходов по категориям.~~
-
-Это сложный кейс, __зачем его пихать в тестовое__?
-- [x] Сохранение данных: Обеспечьте сохранение данных о транзакциях между сеансами работы с приложением.
-
-_Примечание_: drift + sqlite в качестве локального хранилища
-- [x] Пользовательский интерфейс: Создайте привлекательный и интуитивно понятный дизайн приложения для удобства пользователей.
-
-_Примечание:_ Имхо, UI сделан на уровне, согласитесь
-- [X] Допустимо использовать только “Published by a pub.dev verified publisher” на https://pub.dev/
-
-_Примечание:_ свой собственный state-management solution (под verified published)
+## Technical nuances
+- An error will appear on the web when creating a category and selecting an image, the fact is that we select and save the image locally, i.e. in the database and cache, but there is no default cache on the web.
+- There's no change of theme, the colors are hardcoded
+- Localization is included in a separate package, but its functionality is not implemented - TBD
+- My own state manager is used - https://github.com/arxdeus/modulisto
