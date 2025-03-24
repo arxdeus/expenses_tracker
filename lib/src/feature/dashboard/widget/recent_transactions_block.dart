@@ -44,7 +44,7 @@ class _RecentTransactionsBlockWidgetState extends State<RecentTransactionsBlockW
           text: context.localization.transactions,
         ),
         StoreBuilder(
-          store: _module.state,
+          unit: _module.state,
           builder: (context, state, child) {
             final historyList = _module.historyList.value;
             return AnimatedSwitcher(
@@ -66,7 +66,9 @@ class _RecentTransactionsBlockWidgetState extends State<RecentTransactionsBlockW
                         ),
                       _ => ListTilePlaceholder(),
                     },
-                    itemCount: state == TransactionHistoryState.loading ? 3 : historyList.length.clamp(0, 3),
+                    itemCount: state == TransactionHistoryState.loading
+                        ? 3
+                        : historyList.length.clamp(0, 3),
                   ),
               },
             );

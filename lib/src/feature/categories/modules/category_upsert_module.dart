@@ -31,12 +31,15 @@ final class CategoryUpsertModule extends Module {
   late final _pipeline = Pipeline.async(
     this,
     ($) => $
-      ..redirect(lifecycle.init, (_) => _prefetchCategory(categoryUuid))
-      ..bind(upsertCategory, _upsertCategoryCall),
+      ..unit(lifecycle.init).redirect((_) => _prefetchCategory(categoryUuid))
+      ..unit(upsertCategory).bind(_upsertCategoryCall),
     transformer: eventTransformers.droppable,
   );
 
-  late final _outgoingPipeline = Pipeline.sync(this, ($) => $..redirect(_upsertDone, (_) => _onUpsertDone?.call()));
+  late final _outgoingPipeline = Pipeline.sync(
+    this,
+    ($) => $..unit(_upsertDone).redirect((_) => _onUpsertDone?.call()),
+  );
 
   Future<void> _prefetchCategory(String? uuid) async {
     if (uuid == null) return;
@@ -87,9 +90,10 @@ final class CategoryUpsertModule extends Module {
         _onCategoryFound = onCategoryFound {
     Module.initialize(
       this,
-      ($) => $
-        ..attach(_pipeline)
-        ..attach(_outgoingPipeline),
+      attach: {
+        _pipeline,
+        _outgoingPipeline,
+      },
     );
   }
 }

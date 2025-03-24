@@ -41,17 +41,16 @@ final class TransactionsHistoryModule extends Module {
   late final _pipeline = Pipeline.async(
     this,
     ($) => $
-      ..bind(loadHistory, _loadHistory)
-      ..bind(_updates.transactionUpdates, _handleUpdate),
+      ..unit(loadHistory).bind(_loadHistory)
+      ..stream(_updates.transactionUpdates).bind(_handleUpdate),
     transformer: eventTransformers.sequental,
   );
 
   late final _syncPipeline = Pipeline.sync(
     this,
     ($) => $
-      ..redirect(historyList, print)
-      ..redirect(
-        lifecycle.init,
+      ..unit(historyList).redirect(print)
+      ..unit(lifecycle.init).redirect(
         (_) => loadHistory(
           (
             categoryUuid: null,
@@ -70,12 +69,10 @@ final class TransactionsHistoryModule extends Module {
         _useFakeDelay = useFakeDelay,
         _limit = limit,
         _transactionsGetManyDataProvider = transactionsDataProvider {
-    Module.initialize(
-      this,
-      (ref) => ref
-        ..attach(_pipeline)
-        ..attach(_syncPipeline),
-    );
+    Module.initialize(this, attach: {
+      _pipeline,
+      _syncPipeline,
+    });
   }
 
   Future<void> _loadHistory(PipelineContext context, TransactionRequestPagination payload) async {
@@ -110,7 +107,9 @@ final class TransactionsHistoryModule extends Module {
     if (newList.length < 15) {
       context.update(
         state,
-        historyList.value.isEmpty ? TransactionHistoryState.notFound : TransactionHistoryState.endOfList,
+        historyList.value.isEmpty
+            ? TransactionHistoryState.notFound
+            : TransactionHistoryState.endOfList,
       );
       return;
     }

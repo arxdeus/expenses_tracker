@@ -33,14 +33,16 @@ class UpsertTransactionScreen extends StatefulWidget {
 class _UpsertTransactionScreenState extends State<UpsertTransactionScreen> {
   final _inputNameController = TextEditingController();
   final _inputAmountController = TextEditingController();
-  late final ValueNotifier<CategoryEntity> _selectedCategory = ValueNotifier(InternalEmptyCategory());
+  late final ValueNotifier<CategoryEntity> _selectedCategory =
+      ValueNotifier(InternalEmptyCategory());
 
   bool get _isEditingMode => widget.uuid != null;
 
   late final _module = TransactionUpsertModule(
     transactionUuid: widget.uuid,
     transactionGetSingle: DependenciesScope.of(context).transactionHistoryProvider,
-    transactionUpdatesDataRepository: DependenciesScope.of(context).transactionUpdatesDataRepository,
+    transactionUpdatesDataRepository:
+        DependenciesScope.of(context).transactionUpdatesDataRepository,
     onTransactionFound: (transaction) {
       _inputNameController.text = transaction.meta.description;
       _selectedCategory.value = transaction.meta.category ?? InternalEmptyCategory();
@@ -107,7 +109,9 @@ class _UpsertTransactionScreenState extends State<UpsertTransactionScreen> {
                 children: [
                   FittedBox(
                     child: Text(
-                      _isEditingMode ? context.localization.editTransaction : context.localization.createTransaction,
+                      _isEditingMode
+                          ? context.localization.editTransaction
+                          : context.localization.createTransaction,
                       style: TextStyle(
                         height: 1,
                         fontFamily: FontFamily.euclidFlex,
@@ -220,13 +224,14 @@ class _UpsertTransactionScreenState extends State<UpsertTransactionScreen> {
                           ),
                         ),
                         leading: CircleAvatar(
-                          backgroundImage: category.meta.imageUrl?.pipe(ImageLink.local).toImageProvider(),
+                          backgroundImage:
+                              category.meta.imageUrl?.pipe(ImageLink.local).toImageProvider(),
                         ),
                       ),
                     ),
                   ),
                   StoreBuilder(
-                    store: _module.isLoading,
+                    unit: _module.isLoading,
                     builder: (context, state, _) => ButtonWithShadow(
                       width: switch (state) {
                         TransactionUpsertState.idle => MediaQuery.sizeOf(context).width,
@@ -244,7 +249,9 @@ class _UpsertTransactionScreenState extends State<UpsertTransactionScreen> {
                       },
                       child: switch (state) {
                         TransactionUpsertState.idle => Text(
-                            _isEditingMode ? context.localization.save : context.localization.create,
+                            _isEditingMode
+                                ? context.localization.save
+                                : context.localization.create,
                             style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w700,

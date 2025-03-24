@@ -1,10 +1,21 @@
-import 'package:app_core/app_core.dart';
+import 'package:app_core/app_core.dart' as core;
 import 'package:expenses_tracker/src/feature/balance/modules/balance_updates_module.dart';
 import 'package:expenses_tracker/src/shared/effects/size_fade_transition.dart';
 import 'package:flutter/material.dart';
 import 'package:modulisto_flutter/modulisto_flutter.dart';
 import 'package:resources/_assets/assets.gen.dart';
 import 'package:resources/resources.dart';
+
+class SomeNotifier with core.ChangeNotifier {
+  int x = 0;
+
+  void xdd() {
+    x++;
+    notifyListeners();
+  }
+}
+
+class NotifierWrapper2 extends SomeNotifier implements Listenable {}
 
 class BalanceWithGraph extends StatefulWidget {
   const BalanceWithGraph({
@@ -18,12 +29,20 @@ class BalanceWithGraph extends StatefulWidget {
 class _BalanceWithGraphState extends State<BalanceWithGraph> {
   late final _module = ModuleScope.of<BalanceUpdatesModule>(context);
   late final _graphVisibilityState = ValueNotifier(false);
+  final xx = NotifierWrapper2();
 
   @override
   void dispose() {
     _graphVisibilityState.dispose();
     _module.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    xx.addListener(() => print(xx));
+    xx.xdd();
   }
 
   @override
@@ -80,16 +99,17 @@ class _BalanceWithGraphState extends State<BalanceWithGraph> {
                 _graphVisibilityState.value = !_graphVisibilityState.value;
               },
               child: StoreBuilder(
-                store: _module.state,
+                unit: _module.state,
                 builder: (context, balance, _) {
-                  final bool isPositiveTransaction = !(balance?.integerValue.sign.isNegative ?? false);
+                  final bool isPositiveTransaction =
+                      !(balance?.integerValue.sign.isNegative ?? false);
                   final String transactionSign = isPositiveTransaction ? r'$' : r'-$';
                   return Row(
                     children: [
                       Expanded(
                         flex: 7,
                         child: balance == null
-                            ? TextPlaceholder()
+                            ? core.TextPlaceholder()
                             : Text(
                                 balance.toStringWithPrefix(
                                   prefix: transactionSign,
@@ -114,10 +134,10 @@ class _BalanceWithGraphState extends State<BalanceWithGraph> {
                 },
               ),
             ),
-            ValueListenableBuilder(
-              valueListenable: _graphVisibilityState,
-              builder: (context, isExpanded, _) => SizeFadeExplicitTransition(
-                isExpanded: isExpanded,
+            ListenableBuilder(
+              listenable: xx,
+              builder: (context, _) => SizeFadeExplicitTransition(
+                isExpanded: true,
                 curve: Curves.easeIn,
                 child: Assets.images.graph.image(
                   fit: BoxFit.fitWidth,

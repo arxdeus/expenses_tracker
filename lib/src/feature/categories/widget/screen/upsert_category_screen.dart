@@ -96,7 +96,9 @@ class _UpsertCategoryScreenState extends State<UpsertCategoryScreen> {
                 children: [
                   FittedBox(
                     child: Text(
-                      _isEditingMode ? context.localization.editCategory : context.localization.createCategory,
+                      _isEditingMode
+                          ? context.localization.editCategory
+                          : context.localization.createCategory,
                       style: TextStyle(
                         height: 1,
                         fontFamily: FontFamily.euclidFlex,
@@ -134,7 +136,8 @@ class _UpsertCategoryScreenState extends State<UpsertCategoryScreen> {
                             ),
                             alignLabelWithHint: true,
                             focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Color.fromARGB(255, 67, 41, 236), width: 2),
+                              borderSide:
+                                  BorderSide(color: Color.fromARGB(255, 67, 41, 236), width: 2),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             border: OutlineInputBorder(
@@ -190,7 +193,7 @@ class _UpsertCategoryScreenState extends State<UpsertCategoryScreen> {
                     ),
                   ),
                   StoreBuilder(
-                    store: _module.isLoading,
+                    unit: _module.isLoading,
                     builder: (context, state, _) => ButtonWithShadow(
                       width: switch (state) {
                         CategoryUpsertState.idle => MediaQuery.sizeOf(context).width,
@@ -208,7 +211,9 @@ class _UpsertCategoryScreenState extends State<UpsertCategoryScreen> {
                       },
                       child: switch (state) {
                         CategoryUpsertState.idle => Text(
-                            _isEditingMode ? context.localization.save : context.localization.create,
+                            _isEditingMode
+                                ? context.localization.save
+                                : context.localization.create,
                             style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w700,

@@ -42,17 +42,16 @@ final class CategoriesHistoryModule extends Module {
   late final _pipeline = Pipeline.async(
     this,
     ($) => $
-      ..bind(loadHistory, _loadHistory)
-      ..bind(_updates.categoryUpdates, _handleUpdate),
+      ..unit(loadHistory).bind(_loadHistory)
+      ..stream(_updates.categoryUpdates).bind(_handleUpdate),
     transformer: eventTransformers.sequental,
   );
 
   late final _syncPipeline = Pipeline.sync(
     this,
     ($) => $
-      ..redirect(historyList, print)
-      ..redirect(
-        lifecycle.init,
+      ..unit(historyList).redirect(print)
+      ..unit(lifecycle.init).redirect(
         (_) => loadHistory(
           (
             categoryUuid: null,
@@ -73,9 +72,10 @@ final class CategoriesHistoryModule extends Module {
         _categoriesGetManyDataProvider = categoriesDataProvider {
     Module.initialize(
       this,
-      (ref) => ref
-        ..attach(_pipeline)
-        ..attach(_syncPipeline),
+      attach: {
+        _pipeline,
+        _syncPipeline,
+      },
     );
   }
 

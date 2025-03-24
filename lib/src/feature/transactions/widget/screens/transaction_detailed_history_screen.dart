@@ -107,7 +107,7 @@ class _TransactionDetailedHistoryScreenState extends State<TransactionDetailedHi
                     SliverPadding(
                       padding: const EdgeInsets.all(16),
                       sliver: StoreBuilder(
-                        store: _module.state,
+                        unit: _module.state,
                         builder: (context, state, _) {
                           final historyList = _module.historyList.value;
                           return SliverAnimatedSwitcher(
@@ -125,8 +125,10 @@ class _TransactionDetailedHistoryScreenState extends State<TransactionDetailedHi
                                     if (nextIndex == historyList.length) return SizedBox.shrink();
                                     final entity = historyList[index];
                                     final nextEntity = historyList[nextIndex];
-                                    if (entity.meta.updatedAt.day != nextEntity.meta.updatedAt.day ||
-                                        entity.meta.updatedAt.month != nextEntity.meta.updatedAt.month) {
+                                    if (entity.meta.updatedAt.day !=
+                                            nextEntity.meta.updatedAt.day ||
+                                        entity.meta.updatedAt.month !=
+                                            nextEntity.meta.updatedAt.month) {
                                       return Padding(
                                         padding: const EdgeInsets.symmetric(vertical: 8),
                                         child: DecoratedBox(
@@ -163,7 +165,8 @@ class _TransactionDetailedHistoryScreenState extends State<TransactionDetailedHi
                                       _ => ListTilePlaceholder(),
                                     },
                                   ),
-                                  itemCount: (state == TransactionHistoryState.loading && historyList.isEmpty)
+                                  itemCount: (state == TransactionHistoryState.loading &&
+                                          historyList.isEmpty)
                                       ? 15
                                       : historyList.length,
                                 ),

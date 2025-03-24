@@ -22,7 +22,7 @@ class CategoryGrid extends StatefulWidget {
   });
 
   final bool canCreateNew;
-  final ValueChanged<CategoryEntity>? onCategoryTap;
+  final void Function(CategoryEntity)? onCategoryTap;
 
   @override
   State<CategoryGrid> createState() => _CategoryGridState();
@@ -45,15 +45,16 @@ class _CategoryGridState extends State<CategoryGrid> {
 
   @override
   Widget build(BuildContext context) => StoreBuilder(
-        store: _module.state,
+        unit: _module.state,
         builder: (context, state, _) {
           return StoreBuilder(
-            store: _module.historyList,
+            unit: _module.historyList,
             builder: (context, historyList, _) => SliverAnimatedSwitcher(
               duration: kThemeAnimationDuration,
               child: SliverGrid.builder(
                 key: ValueKey(historyList.isEmpty),
-                itemCount: state == CategoryHistoryState.loading ? 4 : historyList.length + _additive,
+                itemCount:
+                    state == CategoryHistoryState.loading ? 4 : historyList.length + _additive,
                 gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 280),
                 itemBuilder: (context, index) {
                   final isAdditiveTile = _additive > 0 && index == historyList.length;

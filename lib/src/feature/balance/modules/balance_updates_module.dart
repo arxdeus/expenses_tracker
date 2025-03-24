@@ -14,8 +14,8 @@ final class BalanceUpdatesModule extends Module {
   late final _pipeline = Pipeline.async(
     this,
     ($) => $
-      ..bind(lifecycle.init, _retakeFromStats)
-      ..bind(_updates.transactionUpdates, _updateBalanceOnCategory),
+      ..unit(lifecycle.init).bind(_retakeFromStats)
+      ..stream(_updates.transactionUpdates).bind(_updateBalanceOnCategory),
     transformer: eventTransformers.sequental,
   );
 
@@ -24,7 +24,10 @@ final class BalanceUpdatesModule extends Module {
     context.update(state, actualBalance);
   }
 
-  Future<void> _updateBalanceOnCategory(PipelineContext context, ObjectUpdate<TransactionEntity> update) async {
+  Future<void> _updateBalanceOnCategory(
+    PipelineContext context,
+    ObjectUpdate<TransactionEntity> update,
+  ) async {
     final stats = update.data.meta.amount;
     final currentState = state.value ?? Decimal(integerValue: 0);
     final resultBalance = currentState + stats;
@@ -38,7 +41,7 @@ final class BalanceUpdatesModule extends Module {
         _updates = updates {
     Module.initialize(
       this,
-      ($) => $..attach(_pipeline),
+      attach: {_pipeline},
     );
   }
 }

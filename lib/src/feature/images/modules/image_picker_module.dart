@@ -14,11 +14,7 @@ final class ImagePickerModule extends Module {
 
   late final _pipeline = Pipeline.async(
     this,
-    ($) => $
-      ..bind(
-        pickImage,
-        _pickImage,
-      ),
+    ($) => $..unit(pickImage).bind(_pickImage),
     transformer: eventTransformers.restartable,
   );
 
@@ -47,9 +43,8 @@ final class ImagePickerModule extends Module {
   })  : _initialImage = initialImage,
         _fileCache = fileCache,
         _picker = picker {
-    Module.initialize(
-      this,
-      ($) => $..attach(_pipeline),
-    );
+    Module.initialize(this, attach: {
+      _pipeline,
+    });
   }
 }

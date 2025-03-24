@@ -35,12 +35,13 @@ final class TransactionUpsertModule extends Module {
   late final _pipeline = Pipeline.async(
     this,
     ($) => $
-      ..redirect(lifecycle.init, (_) => _prefetchTransaction(transactionUuid))
-      ..bind(upsertTransaction, _upsertTransactionCall),
+      ..unit(lifecycle.init).redirect((_) => _prefetchTransaction(transactionUuid))
+      ..unit(upsertTransaction).bind(_upsertTransactionCall),
     transformer: eventTransformers.droppable,
   );
 
-  late final _outgoingPipeline = Pipeline.sync(this, ($) => $..redirect(_upsertDone, (_) => _onUpsertDone?.call()));
+  late final _outgoingPipeline =
+      Pipeline.sync(this, ($) => $..unit(_upsertDone).redirect((_) => _onUpsertDone?.call()));
 
   Future<void> _prefetchTransaction(String? uuid) async {
     if (uuid == null) return;
@@ -49,7 +50,10 @@ final class TransactionUpsertModule extends Module {
     _onTransactionFound?.call(transaction);
   }
 
-  Future<void> _upsertTransactionCall(PipelineContext context, TransactionUpsertRequest request) async {
+  Future<void> _upsertTransactionCall(
+    PipelineContext context,
+    TransactionUpsertRequest request,
+  ) async {
     try {
       context.update(isLoading, TransactionUpsertState.processing);
       if (transactionUuid == null) {
@@ -93,11 +97,9 @@ final class TransactionUpsertModule extends Module {
     void Function(TransactionEntity)? onTransactionFound,
   })  : _onUpsertDone = onUpsertDone,
         _onTransactionFound = onTransactionFound {
-    Module.initialize(
-      this,
-      ($) => $
-        ..attach(_pipeline)
-        ..attach(_outgoingPipeline),
-    );
+    Module.initialize(this, attach: {
+      _pipeline,
+      _outgoingPipeline,
+    });
   }
 }

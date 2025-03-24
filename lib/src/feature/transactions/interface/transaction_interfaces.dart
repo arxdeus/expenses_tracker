@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:expenses_tracker/src/feature/transactions/interface/data_repository/transaction_updates_data_repository.dart';
 import 'package:expenses_tracker/src/feature/transactions/model/transaction_cursor.dart';
 import 'package:expenses_tracker/src/feature/transactions/model/transaction_entity.dart';
 import 'package:expenses_tracker/src/shared/model/decimal.dart';
@@ -22,7 +21,10 @@ abstract class TransactionDeleteInterface {
 }
 
 abstract class TransactionUpdateSingleInterface {
-  Future<TransactionEntity?> updateTransaction(String uuid, TransactionEntity Function(TransactionEntity old) update);
+  Future<TransactionEntity?> updateTransaction(
+    String uuid,
+    TransactionEntity Function(TransactionEntity old) update,
+  );
 }
 
 abstract class TransactionUpdatesInterface {

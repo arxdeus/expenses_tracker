@@ -21,8 +21,8 @@ dependencies:
 
 
   # no bloc? T_T
-  modulisto: ^1.0.2
-  modulisto_flutter: ^1.0.2
+  modulisto: ^2.4.0
+  modulisto_flutter: ^2.2.0
 
   go_router: ^14.8.0
   intl: ^0.20.2
